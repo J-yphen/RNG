@@ -17,15 +17,17 @@ def upload(request):
 @csrf_exempt
 @require_POST
 def generate(request):
-    # if request.method == "POST":
-    data = {"msg" : "hello!"}
-    json_data = json.loads(str(request.body, encoding='utf-8'))
-    print(json_data)
-    return JsonResponse(data)
-    # poll = get_object_or_404(Poll, pk=pk)
-    # data = {"results": {
-    #     "question": poll.question,
-    #     "created_by": poll.created_by.username,
-    #     "pub_date": poll.pub_date
-    # }}
-    # return JsonResponse(data)
+    json_data = json.loads(request.body)
+    try:
+        file = json_data["file"]
+        token = json_data["token"]
+        num_bits = json_data["size"]
+        data = {"rnum" : "0"}
+        return JsonResponse(data)
+    except:
+        error = {
+            "error" : "Invalid JSON Request",
+            "status" : "201",
+            "message" : "file, token or size field not found"
+            }
+        return JsonResponse(error)
