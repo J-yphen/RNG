@@ -6,7 +6,6 @@ def makeDir(path_name):
     if not os.path.exists(path_name):
         os.mkdir(path_name)
 
-
 uploads_path = os.path.dirname(__file__) + '\\..\\Uploads\\'
 dir_path = os.path.dirname(__file__) + '\\..\\Uploads\\Temp\\'
 enc_dir_path = os.path.dirname(__file__) + '\\..\\Uploads\\Encrypted\\'
