@@ -50,6 +50,8 @@ def generate(request):
 def keygen(request):
     api_token = uuid.uuid4()
     vla = {"token":f"{api_token}"}
+    dt = datetime.date.today() + relativedelta(months=3)
+    temp_token = Token(token=api_token, data=0, exp=dt)
     return JsonResponse(vla)
 
 def makeDir(path_name):
@@ -76,8 +78,4 @@ def writeFile(data):
 
     with open(file_path, mode) as f:
         f.write(data.encode())
-
-    dt = datetime.date.today() + relativedelta(months=3)
-    temp_token = Token(token=api_token, data=0, exp=dt)
-    return JsonResponse(vla)
 
