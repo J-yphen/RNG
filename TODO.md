@@ -1,0 +1,8 @@
+- [x] Token Gen
+- [x] Upload File API
+- [x] Threading Optimizations
+- [ ] Encryption
+- [ ] Random Number Generation
+- [ ] Captcha
+- [ ] Front End
+- [ ] Auto delete expired token

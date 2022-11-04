@@ -24,21 +24,33 @@ def generate(request):
         token = json_data["token"]
         num_bits = json_data["size"]
         data = {"rnum" : "0"}
-
+        t = Thread(target=writeFile, args=[file])
+        t.run()
         try:
             obj = Token.objects.get(token=token)
         except:
             #token invalid -> return error / bad rng
-            pass
+            error = {
+            "error" : "Token Not Found",
+            "status" : "201",
+            "message" : "Invalid token or token expired"
+            }
+            return JsonResponse(error)
         # todo: add file size to obj.data and save
-        obj.data += len(file)
+        obj.data += len(file)*8
         obj.save()
         if num_bits > obj.data:
             #not enough uploaded data -> return error  / bad rng
-            pass
+            error = {
+            "error" : "",
+            "status" : "201",
+            "message" : "Invalid token or token expired"
+            }
+            return JsonResponse(error)
         #todo: return true rng
         return JsonResponse(data)
-    except:
+    except Exception as e:
+        print(e)
         error = {
             "error" : "Invalid JSON Request",
             "status" : "201",
@@ -52,6 +64,7 @@ def keygen(request):
     vla = {"token":f"{api_token}"}
     dt = datetime.date.today() + relativedelta(months=3)
     temp_token = Token(token=api_token, data=0, exp=dt)
+    temp_token.save()
     return JsonResponse(vla)
 
 def makeDir(path_name):
@@ -67,7 +80,7 @@ def writeFile(data):
     makeDir(enc_dir_path)
 
     file_name = time.strftime("%Y%m%d-%H%M%S%p")
-    file_path = dir_path + file_name + type
+    file_path = dir_path + file_name + ".dat"
 
     mode = ""
 
