@@ -7,6 +7,9 @@ import json
 import uuid
 import time
 import os
+import datetime
+from dateutil.relativedelta import relativedelta
+from .models import Token
 
 def upload(request):
     data = {"msg" : "hello!"}
@@ -21,6 +24,19 @@ def generate(request):
         token = json_data["token"]
         num_bits = json_data["size"]
         data = {"rnum" : "0"}
+
+        try:
+            obj = Token.objects.get(token=token)
+        except:
+            #token invalid -> return error / bad rng
+            pass
+        # todo: add file size to obj.data and save
+        obj.data += len(file)
+        obj.save()
+        if num_bits > obj.data:
+            #not enough uploaded data -> return error  / bad rng
+            pass
+        #todo: return true rng
         return JsonResponse(data)
     except:
         error = {
@@ -60,3 +76,8 @@ def writeFile(data):
 
     with open(file_path, mode) as f:
         f.write(data.encode())
+
+    dt = datetime.date.today() + relativedelta(months=3)
+    temp_token = Token(token=api_token, data=0, exp=dt)
+    return JsonResponse(vla)
+
