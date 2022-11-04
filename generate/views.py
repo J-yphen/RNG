@@ -4,7 +4,9 @@ from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 import json
 import uuid
-# from .models import Poll
+import datetime
+from dateutil.relativedelta import relativedelta
+from .models import Token
 
 def upload(request):
     data = {"msg" : "hello!"}
@@ -19,6 +21,19 @@ def generate(request):
         token = json_data["token"]
         num_bits = json_data["size"]
         data = {"rnum" : "0"}
+
+        try:
+            obj = Token.objects.get(token=token)
+        except:
+            #token invalid -> return error / bad rng
+            pass
+        # todo: add file size to obj.data and save
+        obj.data += len(file)
+        obj.save()
+        if num_bits > obj.data:
+            #not enough uploaded data -> return error  / bad rng
+            pass
+        #todo: return true rng
         return JsonResponse(data)
     except:
         error = {
@@ -32,4 +47,6 @@ def generate(request):
 def keygen(request):
     api_token = uuid.uuid4()
     vla = {"token":f"{api_token}"}
+    dt = datetime.date.today() + relativedelta(months=3)
+    temp_token = Token(token=api_token, data=0, exp=dt)
     return JsonResponse(vla)
