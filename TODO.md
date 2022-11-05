@@ -1,7 +1,7 @@
 - [x] Token Gen
 - [x] Upload File API
 - [x] Threading Optimizations
-- [ ] Encryption
+- [x] Encryption
 - [ ] Random Number Generation
 - [ ] Captcha
 - [ ] Front End

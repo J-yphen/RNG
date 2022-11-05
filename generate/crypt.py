@@ -10,8 +10,6 @@ dir_path = os.path.dirname(__file__) + '\\..\\Uploads\\Temp\\'
 enc_dir_path = os.path.dirname(__file__) + '\\..\\Uploads\\Encrypted\\'
 
 key = base64.urlsafe_b64encode(b'00000000000000000000000000000000')
-large =  False
-MAX = 12000
 
 def makeDir(path_name):
     if not os.path.exists(path_name):
@@ -42,9 +40,16 @@ def encryptBlock(m, file):
     storeFile(random_data, file)
 
 
-files = os.listdir(dir_path)
-for file in files:
-    f = open(dir_path+file, 'r+b')
-    m = mmap.mmap(f.fileno(), 0)
-    f.close()
-    encryptBlock(m, file)
+def entry():
+    files = os.listdir(dir_path)
+    for file in files:
+        f = open(dir_path+file, 'r+b')
+        m = mmap.mmap(f.fileno(), 0)
+        f.close()
+        encryptBlock(m, file)
+
+    for file in files:
+        try:
+            os.remove(dir_path+file)
+        except:
+            pass
