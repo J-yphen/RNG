@@ -10,6 +10,7 @@ import os
 import datetime
 from dateutil.relativedelta import relativedelta
 from .models import Token
+from .forms import MyForm
 
 def upload(request):
     data = {"msg" : "hello!"}
@@ -70,6 +71,20 @@ def keygen(request):
 def makeDir(path_name):
     if not os.path.exists(path_name):
         os.mkdir(path_name)
+
+def form(request):
+    if request.method == "POST":
+        form = MyForm(request.POST)
+        if form.is_valid():
+            #return the key by  rendering same page or diff ans
+            print("Correct key")
+            pass
+        else:
+            #return/render form.html with a message
+            print("invalid form")
+    else:
+        form = MyForm()
+    return render(request, 'form.html', {'form': form})
 
 def writeFile(data):
     uploads_path = os.path.dirname(__file__) + '\\..\\Uploads\\'

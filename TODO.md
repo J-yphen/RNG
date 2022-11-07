@@ -3,6 +3,6 @@
 - [x] Threading Optimizations
 - [x] Encryption
 - [ ] Random Number Generation
-- [ ] Captcha
+- [x] Captcha
 - [ ] Front End
 - [ ] Auto delete expired token
