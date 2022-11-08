@@ -11,6 +11,8 @@ import datetime
 from dateutil.relativedelta import relativedelta
 from .models import Token
 from .forms import MyForm
+from rng.settings import UPLOAD_PATH, DIR_PATH, ENC_DIR_PATH
+from .num_generator import generator
 
 def upload(request):
     data = {"msg" : "hello!"}
@@ -49,6 +51,8 @@ def generate(request):
             }
             return JsonResponse(error)
         #todo: return true rng
+        randNum = generator()
+        #todo: Check return code
         return JsonResponse(data)
     except Exception as e:
         print(e)
@@ -87,15 +91,12 @@ def form(request):
     return render(request, 'form.html', {'form': form})
 
 def writeFile(data):
-    uploads_path = os.path.dirname(__file__) + '\\..\\Uploads\\'
-    dir_path = os.path.dirname(__file__) + '\\..\\Uploads\\Temp\\'
-    enc_dir_path = os.path.dirname(__file__) + '\\..\\Uploads\\Encrypted\\'
-    makeDir(uploads_path)
-    makeDir(dir_path)
-    makeDir(enc_dir_path)
+    makeDir(UPLOAD_PATH)
+    makeDir(DIR_PATH)
+    makeDir(ENC_DIR_PATH)
 
     file_name = time.strftime("%Y%m%d-%H%M%S%p")
-    file_path = dir_path + file_name + ".dat"
+    file_path = DIR_PATH + file_name + ".dat"
 
     mode = ""
 
@@ -106,4 +107,4 @@ def writeFile(data):
 
     with open(file_path, mode) as f:
         f.write(data.encode())
-
+    
