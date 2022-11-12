@@ -6,5 +6,5 @@ from generate import crypt
         
 def start():
         scheduler = BackgroundScheduler()
-        scheduler.add_job(crypt.entry, 'interval', minutes=1)
+        scheduler.add_job(crypt.entry, 'interval', weeks=1)
         scheduler.start()

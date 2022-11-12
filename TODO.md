@@ -2,7 +2,8 @@
 - [x] Upload File API
 - [x] Threading Optimizations
 - [x] Encryption
-- [ ] Random Number Generation
+- [x] Random Number Generation
 - [x] Captcha
+- [ ] Variable Random Number Generation
 - [ ] Front End
 - [ ] Auto delete expired token

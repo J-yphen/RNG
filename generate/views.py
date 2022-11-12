@@ -12,7 +12,9 @@ from dateutil.relativedelta import relativedelta
 from .models import Token
 from .forms import MyForm
 from rng.settings import UPLOAD_PATH, DIR_PATH, ENC_DIR_PATH
-from .num_generator import generator
+from .num_generator import dataQueue
+
+randNumObj = dataQueue()
 
 def upload(request):
     data = {"msg" : "hello!"}
@@ -26,7 +28,6 @@ def generate(request):
         file = json_data["file"]
         token = json_data["token"]
         num_bits = json_data["size"]
-        data = {"rnum" : "0"}
         t = Thread(target=writeFile, args=[file])
         t.run()
         try:
@@ -51,7 +52,10 @@ def generate(request):
             }
             return JsonResponse(error)
         #todo: return true rng
-        randNum = generator()
+        randNum = randNumObj.generator(num_bits)
+        data = {"rnum" : randNum}
+        obj.data -= num_bits
+        obj.save()
         #todo: Check return code
         return JsonResponse(data)
     except Exception as e:
@@ -91,6 +95,8 @@ def form(request):
     return render(request, 'form.html', {'form': form})
 
 def writeFile(data):
+    if data == "":
+        return
     makeDir(UPLOAD_PATH)
     makeDir(DIR_PATH)
     makeDir(ENC_DIR_PATH)
