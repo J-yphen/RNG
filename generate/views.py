@@ -40,23 +40,22 @@ def generate(request):
             "message" : "Invalid token or token expired"
             }
             return JsonResponse(error)
-        # todo: add file size to obj.data and save
+        # add file size to obj.data and save
         obj.data += len(file)*8
         obj.save()
         if num_bits > obj.data:
-            #not enough uploaded data -> return error  / bad rng
+            # not enough uploaded data -> return error
             error = {
             "error" : "",
             "status" : "201",
             "message" : "Invalid token or token expired"
             }
             return JsonResponse(error)
-        #todo: return true rng
+        # return rng
         randNum = randNumObj.generator(num_bits)
         data = {"rnum" : randNum}
         obj.data -= num_bits
         obj.save()
-        #todo: Check return code
         return JsonResponse(data)
     except Exception as e:
         print(e)
@@ -83,10 +82,10 @@ def form(request):
     if request.method == "POST":
         form = MyForm(request.POST)
         if form.is_valid():
-            #return the key by  rendering same page or diff ans
+            #return the key by rendering same page
             message = "Key: " + str(keygen())
         else:
-            #return/render form.html with a message
+            #return form.html with error message
             message = "Captcha Error"
     else:
         form = MyForm()
