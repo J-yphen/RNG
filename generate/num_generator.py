@@ -38,7 +38,10 @@ class dataQueue:
         if self.numQueue.empty():
             self.fill()
         num = self.numQueue.get(0)
-        print(int(num.decode(), 16))
+        num = num[:(num_bits%(32))] # 32 = 8 * 4 because 4 bytes
+        for block in range(num_bits//(32)):
+            num += self.numQueue.get(0)
+        # print(int(num.decode(), 16))
         num = int(num.decode(), 16)
         return num
 
