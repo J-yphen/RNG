@@ -23,7 +23,7 @@ class dataQueue:
                 with open (file_path, "rb") as f:
                     while True:
                         data = f.read(self.blockSize)
-                        if not data:
+                        if not data or len(data) < self.blockSize:
                             break
                         self.numQueue.put(data)
             except:
@@ -34,16 +34,24 @@ class dataQueue:
             
             self.renameFile(file)
     
-    def generator(self, num_bits):
+    def generator(self, num_bytes):
         if self.numQueue.empty():
             self.fill()
-        num = self.numQueue.get(0)
-        num = num[:(num_bits%(32))] # 32 = 8 * 4 because 4 bytes
-        for block in range(num_bits//(32)):
-            num += self.numQueue.get(0)
-        # print(int(num.decode(), 16))
-        num = int(num.decode(), 16)
+
+        try:
+            num = self.numQueue.get(0)
+            num = num[:(num_bytes%(32))] # 32 = 8 * 4 because 4 bytes
+            for block in range(num_bytes//(32)):
+                num += self.numQueue.get(0)
+            # print(int(num.decode(), 16))
+            num = int(num.decode(), 16)
+        except Exception as e:
+            print(e)
+
         return num
 
     def renameFile(self, file):
-        os.rename(ENC_DIR_PATH + file, DIR_PATH + file.split('.')[0] + ".dat" )
+        try:
+            os.rename(ENC_DIR_PATH + file, DIR_PATH + file.split('.')[0] + ".dat")
+        except:
+            os.replace(ENC_DIR_PATH + file, DIR_PATH + file.split('.')[0] + ".dat")

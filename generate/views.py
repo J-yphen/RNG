@@ -27,7 +27,7 @@ def generate(request):
     try:
         file = json_data["file"]
         token = json_data["token"]
-        num_bits = json_data["size"]
+        num_bytes = json_data["size"]
         t = Thread(target=writeFile, args=[file])
         t.run()
         try:
@@ -43,7 +43,7 @@ def generate(request):
         # add file size to obj.data and save
         obj.data += len(file)*8
         obj.save()
-        if num_bits > obj.data:
+        if num_bytes > obj.data:
             # not enough uploaded data -> return error
             error = {
             "error" : "",
@@ -52,9 +52,9 @@ def generate(request):
             }
             return JsonResponse(error)
         # return rng
-        randNum = randNumObj.generator(num_bits)
+        randNum = randNumObj.generator(num_bytes*2)
         data = {"rnum" : randNum}
-        obj.data -= num_bits
+        obj.data -= num_bytes
         obj.save()
         return JsonResponse(data)
     except Exception as e:
