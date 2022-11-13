@@ -47,9 +47,9 @@ def generate(request):
         if num_bytes > obj.data:
             # not enough uploaded data -> return error
             error = {
-            "error" : "",
+            "error" : "Data Insufficient",
             "status" : "201",
-            "message" : "Invalid token or token expired"
+            "message" : "Required size of random number too large"
             }
             return JsonResponse(error)
         # return rng
