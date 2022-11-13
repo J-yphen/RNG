@@ -40,8 +40,9 @@ def generate(request):
             "message" : "Invalid token or token expired"
             }
             return JsonResponse(error)
-        # add file size to obj.data and save
+        # add file size to obj.data, increases time and saves
         obj.data += len(file)*8
+        obj.exp =  datetime.date.today() + relativedelta(months=3)
         obj.save()
         if num_bits > obj.data:
             # not enough uploaded data -> return error
