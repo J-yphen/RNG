@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import generate, upload, keygen, form
+from .views import generate, upload, form
 
 urlpatterns = [
     path("api/generate/", generate, name="Random number generator"),
