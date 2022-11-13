@@ -67,14 +67,13 @@ def generate(request):
             }
         return JsonResponse(error)
 
-@require_GET
-def keygen(request):
+def keygen():
     api_token = uuid.uuid4()
-    vla = {"token":f"{api_token}"}
+    #vla = {"token":f"{api_token}"}
     dt = datetime.date.today() + relativedelta(months=3)
     temp_token = Token(token=api_token, data=0, exp=dt)
     temp_token.save()
-    return JsonResponse(vla)
+    return api_token
 
 def makeDir(path_name):
     if not os.path.exists(path_name):
@@ -85,14 +84,14 @@ def form(request):
         form = MyForm(request.POST)
         if form.is_valid():
             #return the key by  rendering same page or diff ans
-            print("Correct key")
-            pass
+            message = "Key: " + str(keygen())
         else:
             #return/render form.html with a message
-            print("invalid form")
+            message = "Captcha Error"
     else:
         form = MyForm()
-    return render(request, 'form.html', {'form': form})
+        message=''
+    return render(request, 'form.html', {'form': form, 'message': message})
 
 def writeFile(data):
     if data == "":
