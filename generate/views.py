@@ -93,6 +93,11 @@ def form(request):
         message=''
     return render(request, 'form.html', {'form': form, 'message': message})
 
+def delete_expired():
+    now = datetime.date.today()
+    Token.objects.filter(exp__lt = now).delete()
+
+delete_expired()
 def writeFile(data):
     if data == "":
         return
