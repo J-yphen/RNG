@@ -118,3 +118,35 @@ def writeFile(data):
     with open(file_path, mode) as f:
         f.write(data.encode())
     
+
+@csrf_exempt
+@require_POST
+def user_quota(request):
+    json_data = json.loads(request.body)
+    try:
+        token = json_data["token"]
+        try:
+            obj = Token.objects.get(token=token)
+        except:
+            #token invalid -> return error / bad rng
+            error = {
+            "error" : "Token Not Found",
+            "status" : "201",
+            "message" : "Invalid token or token expired"
+            }
+            return JsonResponse(error)        
+        data = {
+            "remaining": obj.data,
+            "validity": obj.exp
+        }
+
+        # Return remaining data that a user can use and it's token validity
+        return JsonResponse(data)
+    except Exception as e:
+        print(e)
+        error = {
+            "error" : "Invalid JSON Request",
+            "status" : "201",
+            "message" : "file, token or size field not found"
+            }
+        return JsonResponse(error)
