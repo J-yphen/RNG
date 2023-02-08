@@ -1,8 +1,8 @@
 from django.urls import path
-from .views import generate, upload, keygen
+from .views import generate, upload, form
 
 urlpatterns = [
     path("api/generate/", generate, name="Random number generator"),
-    path("token/", keygen, name="token generation"),
-    path("", upload, name="upload")
+    path("token/", form, name="token generation"),
+    path("", upload, name="upload"),
 ]

@@ -1,27 +1,30 @@
 from cryptography.fernet import Fernet
+from rng.settings import UPLOAD_PATH, DIR_PATH, ENC_DIR_PATH
 import binascii
+import shutil
 import base64
 import mmap
 import os
 
 
-uploads_path = os.path.dirname(__file__) + '\\..\\Uploads\\'
-dir_path = os.path.dirname(__file__) + '\\..\\Uploads\\Temp\\'
-enc_dir_path = os.path.dirname(__file__) + '\\..\\Uploads\\Encrypted\\'
+# UPLOAD_PATH = os.path.dirname(__file__) + '\\..\\Uploads\\'
+# DIR_PATH = os.path.dirname(__file__) + '\\..\\Uploads\\Temp\\'
+# ENC_DIR_PATH = os.path.dirname(__file__) + '\\..\\Uploads\\Encrypted\\'
 
-key = base64.urlsafe_b64encode(b'00000000000000000000000000000000')
+# key = base64.urlsafe_b64encode(b'00000000000000000000000000000000')
+key = Fernet.generate_key()
 
 def makeDir(path_name):
     if not os.path.exists(path_name):
         os.mkdir(path_name)
 
 def storeFile(data, file):
-    makeDir(uploads_path)
-    makeDir(dir_path)
-    makeDir(enc_dir_path)
+    makeDir(UPLOAD_PATH)
+    makeDir(DIR_PATH)
+    makeDir(ENC_DIR_PATH)
 
     file_name = file.split('.')[0]
-    file_path = enc_dir_path + file_name + ".enc"
+    file_path = ENC_DIR_PATH + file_name + ".enc"
     mode = ""
 
     if not os.path.isfile(file_path):
@@ -37,19 +40,20 @@ def encryptBlock(m, file):
     f = Fernet(key)
     data = m.read(m.size())
     random_data = binascii.hexlify(f.encrypt(data))
-    storeFile(random_data, file)
+    storeFile(random_data[65:], file)
 
 
 def entry():
-    files = os.listdir(dir_path)
-    for file in files:
-        f = open(dir_path+file, 'r+b')
-        m = mmap.mmap(f.fileno(), 0)
-        f.close()
-        encryptBlock(m, file)
+    try:
+        files = os.listdir(DIR_PATH)
+        for file in files:
+            f = open(DIR_PATH+file, 'r+b')
+            m = mmap.mmap(f.fileno(), 0)
+            f.close()
+            encryptBlock(m, file)
+            m.close()
 
-    for file in files:
-        try:
-            os.remove(dir_path+file)
-        except:
-            pass
+        for file in files:
+            os.remove(DIR_PATH+file)
+    except:
+        pass

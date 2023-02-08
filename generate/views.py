@@ -10,6 +10,11 @@ import os
 import datetime
 from dateutil.relativedelta import relativedelta
 from .models import Token
+from .forms import MyForm
+from rng.settings import UPLOAD_PATH, DIR_PATH, ENC_DIR_PATH
+from .num_generator import dataQueue
+
+randNumObj = dataQueue()
 
 def upload(request):
     data = {"msg" : "hello!"}
@@ -22,8 +27,7 @@ def generate(request):
     try:
         file = json_data["file"]
         token = json_data["token"]
-        num_bits = json_data["size"]
-        data = {"rnum" : "0"}
+        num_bytes = json_data["size"]
         t = Thread(target=writeFile, args=[file])
         t.run()
         try:
@@ -36,18 +40,23 @@ def generate(request):
             "message" : "Invalid token or token expired"
             }
             return JsonResponse(error)
-        # todo: add file size to obj.data and save
+        # add file size to obj.data, increases time and saves
         obj.data += len(file)*8
+        obj.exp =  datetime.date.today() + relativedelta(months=3)
         obj.save()
-        if num_bits > obj.data:
-            #not enough uploaded data -> return error  / bad rng
+        if num_bytes > obj.data:
+            # not enough uploaded data -> return error
             error = {
-            "error" : "",
+            "error" : "Data Insufficient",
             "status" : "201",
-            "message" : "Invalid token or token expired"
+            "message" : "Required size of random number too large"
             }
             return JsonResponse(error)
-        #todo: return true rng
+        # return rng
+        randNum = randNumObj.generator(num_bytes*2)
+        data = {"rnum" : randNum}
+        obj.data -= num_bytes
+        obj.save()
         return JsonResponse(data)
     except Exception as e:
         print(e)
@@ -58,29 +67,46 @@ def generate(request):
             }
         return JsonResponse(error)
 
-@require_GET
-def keygen(request):
+def keygen():
     api_token = uuid.uuid4()
-    vla = {"token":f"{api_token}"}
+    #vla = {"token":f"{api_token}"}
     dt = datetime.date.today() + relativedelta(months=3)
     temp_token = Token(token=api_token, data=0, exp=dt)
     temp_token.save()
-    return JsonResponse(vla)
+    return api_token
 
 def makeDir(path_name):
     if not os.path.exists(path_name):
         os.mkdir(path_name)
 
+def form(request):
+    if request.method == "POST":
+        form = MyForm(request.POST)
+        if form.is_valid():
+            #return the key by rendering same page
+            message = "Key: " + str(keygen())
+        else:
+            #return form.html with error message
+            message = "Captcha Error"
+    else:
+        form = MyForm()
+        message=''
+    return render(request, 'form.html', {'form': form, 'message': message})
+
+def delete_expired():
+    now = datetime.date.today()
+    Token.objects.filter(exp__lt = now).delete()
+
+delete_expired()
 def writeFile(data):
-    uploads_path = os.path.dirname(__file__) + '\\..\\Uploads\\'
-    dir_path = os.path.dirname(__file__) + '\\..\\Uploads\\Temp\\'
-    enc_dir_path = os.path.dirname(__file__) + '\\..\\Uploads\\Encrypted\\'
-    makeDir(uploads_path)
-    makeDir(dir_path)
-    makeDir(enc_dir_path)
+    if data == "":
+        return
+    makeDir(UPLOAD_PATH)
+    makeDir(DIR_PATH)
+    makeDir(ENC_DIR_PATH)
 
     file_name = time.strftime("%Y%m%d-%H%M%S%p")
-    file_path = dir_path + file_name + ".dat"
+    file_path = DIR_PATH + file_name + ".dat"
 
     mode = ""
 
@@ -91,4 +117,4 @@ def writeFile(data):
 
     with open(file_path, mode) as f:
         f.write(data.encode())
-
+    
