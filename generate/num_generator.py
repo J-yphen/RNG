@@ -13,8 +13,8 @@ class dataQueue:
     def fill(self):
         try:
             files = os.listdir(ENC_DIR_PATH)
-        except:
-            print("NO FILE EXISTS")
+        except Exception as e:
+            print(f"\033[1;31;40m[!] File not exists: \033[0m{e}")
             return
 
         for file in files:
@@ -45,9 +45,10 @@ class dataQueue:
                 num += self.numQueue.get(0)
             # print(int(num.decode(), 16))
             num = int(num.decode(), 16)
+            
         except Exception as e:
-            print(e)
-
+            print(f"\033[1;31;40m[!] Empty Stream: \033[0m{e}")
+        
         return num
 
     def renameFile(self, file):

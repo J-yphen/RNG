@@ -1,0 +1,24 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="https://fonts.googleapis.com/css?family=Orbitron&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href=" {% static 'generate\css\main.css' %} ">
+    </head>
+    
+    <body>
+         <div id="controls">
+            <h1 id="marquee">Pixel-Grid</h1>
+            <!-- Preset: <select id="themes">
+                <option value="Maze">The Maze</a>
+            </select> -->
+        </div>
+        <svg>
+            <g></g>
+        </svg>
+
+        <script src="{% static 'generate\js\external.js' %}"></script>
+        <script src=" {% static 'generate\js\maze.js' %} "></script>
+    </body>
+</html>

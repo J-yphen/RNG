@@ -17,8 +17,9 @@ from .num_generator import dataQueue
 randNumObj = dataQueue()
 
 def upload(request):
-    data = {"msg" : "hello!"}
-    return JsonResponse(data)
+    # data = {"msg" : "hello!"}
+    # return JsonResponse(data)
+    return render(request, "generate/index.html")
 
 @csrf_exempt
 @require_POST
