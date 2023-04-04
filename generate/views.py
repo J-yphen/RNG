@@ -88,11 +88,12 @@ def form(request):
             message = "Key: " + str(keygen())
         else:
             #return form.html with error message
-            message = "Captcha Error"
+            # message = "Captcha Error"
+            message = ""
     else:
         form = MyForm()
         message=''
-    return render(request, 'form.html', {'form': form, 'message': message})
+    return render(request, 'generate/index.html', {'form': form, 'message': message})
 
 def delete_expired():
     now = datetime.date.today()
