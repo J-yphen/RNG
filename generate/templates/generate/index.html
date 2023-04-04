@@ -10,16 +10,11 @@
     
     <body>
         <canvas id="c"></canvas>
-        <span>{{ message }}</span>
+        <span id="key">{{ message }}</span>
 
         <form action="/" method="POST" {% if "Key: " in message %}hidden{% endif %}>
                 {% csrf_token %}
                 {{ form }}
-                <!-- <br>
-                {% if "Key: " in message %}
-                    {{ message }}
-                {% endif %} -->
-                <!-- <input type="submit" value="Submit"> -->
                 <br>
                 {% if message == "" %}
                     <button type="submit" style="--color:#69db3a;--border:2px;--slant:.5em">Submit</button>
