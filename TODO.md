@@ -5,5 +5,5 @@
 - [x] Random Number Generation
 - [x] Captcha
 - [ ] Variable Random Number Generation
-- [ ] Front End
-- [ ] Auto delete expired token
+- [x] Auto delete expired token
+- [ ] API Implementation Demo

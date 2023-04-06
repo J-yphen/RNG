@@ -1,11 +1,10 @@
 from rng.settings import ENC_DIR_PATH, DIR_PATH
-import queue
 import os
 
 class dataQueue:
     maxSize = 20971520*2 # 20 MB
-    blockSize = 8 # 4 BYTES
-    numQueue = queue.Queue(maxSize)
+    r, w = os.pipe() # creates a pipe which resides in memory
+    currSize = 0
 
     def __init__(self):
         pass
@@ -21,29 +20,19 @@ class dataQueue:
             file_path = ENC_DIR_PATH + file
             try:
                 with open (file_path, "rb") as f:
-                    while True:
-                        data = f.read(self.blockSize)
-                        if not data or len(data) < self.blockSize:
-                            break
-                        self.numQueue.put(data)
+                    self.currSize += os.write(self.w, f.read()) # os.write(w, b) returns num of bytes which is added to current size
             except:
                 pass
-            
-            if self.numQueue.full():
-                break
-            
             self.renameFile(file)
+            if self.currSize > self.maxSize: # exit condition
+                break
     
     def generator(self, num_bytes):
-        if self.numQueue.empty():
+        if self.currSize <= num_bytes: # fill if not availaible. Note: use offset and multiprocessing if possible, we can pass writing file descripter and it should work using os.fork(). Issue: updating currSize
             self.fill()
-
         try:
-            num = self.numQueue.get(0)
-            num = num[:(num_bytes%(32))] # 32 = 8 * 4 because 4 bytes
-            for block in range(num_bytes//(32)):
-                num += self.numQueue.get(0)
-            # print(int(num.decode(), 16))
+            self.currSize -= num_bytes 
+            num = os.read(self.r, num_bytes)
             num = int(num.decode(), 16)
             
         except Exception as e:
