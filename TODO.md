@@ -4,6 +4,7 @@
 - [x] Encryption
 - [x] Random Number Generation
 - [x] Captcha
-- [ ] Variable Random Number Generation
+- [x] Variable Random Number Generation
 - [x] Auto delete expired token
 - [ ] API Implementation Demo
+- [ ] documentation and easy-copy feature
