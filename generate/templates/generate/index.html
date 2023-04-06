@@ -1,0 +1,27 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="https://fonts.googleapis.com/css?family=Orbitron&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href=" {% static 'generate\css\main.css' %} ">
+        
+    </head>
+    
+    <body>
+        <canvas id="c"></canvas>
+        <span id="key">{{ message }}</span>
+
+        <form action="/" method="POST" {% if "Key: " in message %}hidden{% endif %}>
+                {% csrf_token %}
+                {{ form }}
+                <br>
+                {% if message == "" %}
+                    <button type="submit" style="--color:#69db3a;--border:2px;--slant:.5em">Submit</button>
+                {% endif %}
+        </form>
+        
+        <script src="{% static 'generate\js\external.js' %}"></script>
+        <script src=" {% static 'generate\js\main.js' %} "></script>
+    </body>
+</html>
