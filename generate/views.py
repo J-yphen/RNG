@@ -99,7 +99,12 @@ def delete_expired():
     now = datetime.date.today()
     Token.objects.filter(exp__lt = now).delete()
 
-delete_expired()
+try:
+    delete_expired()
+except:
+    print("[!] Failed to delete expired token.")
+    pass
+
 def writeFile(data):
     if data == "":
         return
