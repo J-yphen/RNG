@@ -1,6 +1,6 @@
 from django.views.decorators.http import require_POST, require_GET
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.http import JsonResponse
 from threading import Thread
 import json
@@ -16,19 +16,13 @@ from .num_generator import dataQueue
 
 randNumObj = dataQueue()
 
-def upload(request):
-    # data = {"msg" : "hello!"}
-    # return JsonResponse(data)
-    return render(request, "generate/index.html")
-
 @csrf_exempt
 @require_POST
-def generate(request):
+def upload(request):
     json_data = json.loads(request.body)
     try:
         file = json_data["file"]
         token = json_data["token"]
-        num_bytes = json_data["size"]
         t = Thread(target=writeFile, args=[file])
         t.run()
         try:
@@ -37,7 +31,7 @@ def generate(request):
             #token invalid -> return error / bad rng
             error = {
             "error" : "Token Not Found",
-            "status" : "201",
+            "status" : "400",
             "message" : "Invalid token or token expired"
             }
             return JsonResponse(error)
@@ -45,11 +39,42 @@ def generate(request):
         obj.data += len(file)*8
         obj.exp =  datetime.date.today() + relativedelta(months=3)
         obj.save()
+        success = {
+            "status" : "200",
+            "message" : "File successfully uploaded."
+            }
+        return JsonResponse(success)
+    except Exception as e:
+        print(e)
+        error = {
+            "error" : "Invalid JSON Request",
+            "status" : "400",
+            "message" : "file, token or size field not found"
+            }
+        return JsonResponse(error)
+
+@csrf_exempt
+@require_GET
+def generate(request):
+    json_data = json.loads(request.body)
+    try:
+        token = json_data["token"]
+        num_bytes = json_data["size"]
+        try:
+            obj = Token.objects.get(token=token)
+        except:
+            #token invalid -> return error / bad rng
+            error = {
+            "error" : "Token Not Found",
+            "status" : "400",
+            "message" : "Invalid token or token expired"
+            }
+            return JsonResponse(error)
         if num_bytes > obj.data:
             # not enough uploaded data -> return error
             error = {
             "error" : "Data Insufficient",
-            "status" : "201",
+            "status" : "400",
             "message" : "Required size of random number too large"
             }
             return JsonResponse(error)
@@ -63,7 +88,7 @@ def generate(request):
         print(e)
         error = {
             "error" : "Invalid JSON Request",
-            "status" : "201",
+            "status" : "400",
             "message" : "file, token or size field not found"
             }
         return JsonResponse(error)
@@ -138,7 +163,7 @@ def user_quota(request):
             #token invalid -> return error / bad rng
             error = {
             "error" : "Token Not Found",
-            "status" : "201",
+            "status" : "400",
             "message" : "Invalid token or token expired"
             }
             return JsonResponse(error)        
@@ -153,7 +178,7 @@ def user_quota(request):
         print(e)
         error = {
             "error" : "Invalid JSON Request",
-            "status" : "201",
+            "status" : "400",
             "message" : "file, token or size field not found"
             }
         return JsonResponse(error)

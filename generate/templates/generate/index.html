@@ -12,16 +12,15 @@
     <body>
         <div id="doc">
             <h1>Random Number Generator API</h1>
-            <p>The Random Number Generator API is a service that provides random numbers to clients who make requests via HTTP. The API generates random numbers using a secure and cryptographically sound algorithm.        </p>
+            <p>The Random Number Generator API is a service that provides random numbers to clients who make requests via HTTP. The API generates large random numbers using files as source of entropy.</p>
             
             <h4>API Endpoints</h4>
             <p>
-                - /api/generate/ : Generate random number of given number of bytes.<br>
-                <pre>
-                    {'file': [Data you want to upload], 'token': [Your API token], 'size': [Size in bytes]}
-                </pre>
-                <br>
-                - /api/balance/ : Get current balance and expiry date of your token.<br>
+                - [GET] /api/generate/ : Generate random number of given number of bytes.
+                <pre>{'token': [Your API token], 'size': [Size in bytes]}</pre>
+                - [POST] /api/upload/ : Upload your file using this endpoint.
+                <pre>{'file': [Data you want to upload], 'token': [Your API token]}</pre>
+                - [POST] /api/balance/ : Get current balance and expiry date of your token.
                 <pre>{'token': [Your API token]}</pre>
             </p>
         </div>
