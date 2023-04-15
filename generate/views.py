@@ -54,7 +54,7 @@ def upload(request):
         return JsonResponse(error)
 
 @csrf_exempt
-@require_GET
+@require_POST
 def generate(request):
     json_data = json.loads(request.body)
     try:
