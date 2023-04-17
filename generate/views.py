@@ -126,6 +126,7 @@ def delete_expired():
 
 try:
     delete_expired()
+    randNumObj.fill()
 except:
     print("[!] Failed to delete expired token.")
     pass
