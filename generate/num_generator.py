@@ -22,6 +22,7 @@ class dataQueue:
                 with open (file_path, "rb") as f:
                     self.currSize += os.write(self.w, f.read()) # os.write(w, b) returns num of bytes which is added to current size
             except:
+                print("p")
                 pass
             self.renameFile(file)
             if self.currSize > self.maxSize: # exit condition

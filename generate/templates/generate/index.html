@@ -5,10 +5,25 @@
     <head>
         <link href="https://fonts.googleapis.com/css?family=Orbitron&display=swap" rel="stylesheet">
         <link rel="stylesheet" href=" {% static 'generate\css\main.css' %} ">
+        <title>Random Number Generator API</title>
         
     </head>
     
     <body>
+        <div id="doc">
+            <h1>Random Number Generator API</h1>
+            <p>The Random Number Generator API is a service that provides random numbers to clients who make requests via HTTP. The API generates large random numbers using files as source of entropy.</p>
+            
+            <h4>API Endpoints</h4>
+            <p>
+                - [POST] /api/generate/ : Generate random number of given number of bytes.
+                <pre>{'token': [Your API token], 'size': [Size in bytes]}</pre>
+                - [POST] /api/upload/ : Upload your file using this endpoint.
+                <pre>{'file': [Data you want to upload], 'token': [Your API token]}</pre>
+                - [POST] /api/balance/ : Get current balance and expiry date of your token.
+                <pre>{'token': [Your API token]}</pre>
+            </p>
+        </div>
         <canvas id="c"></canvas>
         <span id="key">{{ message }}</span>
 

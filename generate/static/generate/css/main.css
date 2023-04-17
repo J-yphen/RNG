@@ -9,6 +9,15 @@
   text-align: center;
   color: black;
 }
+
+#doc {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 1;
+    color: rgb(40, 39, 65);
+}
 canvas {
     display: block;
     width: 100vw;
@@ -21,12 +30,14 @@ canvas {
     overflow: hidden;
     font-family: 'Press Start 2P';
     text-align: center;
+    font-size: small;
   }
 
   form {
     position: absolute;
-    top: 45%;
-    left: 40%;
+    top: 50%;
+    left: 0;
+    width: 100%;
     z-index: 1;
   }
 

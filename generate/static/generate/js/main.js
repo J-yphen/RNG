@@ -7,6 +7,7 @@ var animations = [];
 var circles = [];
 const inputField = document.querySelector('#id_captcha_1');
 const c_label = document.querySelector(`label[for="${inputField.id}"]`);
+const div_style = document.getElementById('doc');
 
 
 var colorPicker = (function() {
@@ -55,6 +56,8 @@ function handleEvent(e) {
     inputField.style.borderColor = currentColor; // Border color changer
     inputField.style.color = currentColor; // Text color changer
     c_label.style.color = currentColor; // Text color changer
+    div_style.style.color = currentColor;
+    
     
     var pageFill = new Circle({
       x: e.pageX,
