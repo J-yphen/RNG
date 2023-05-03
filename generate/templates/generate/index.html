@@ -25,8 +25,12 @@
             </p>
         </div>
         <canvas id="c"></canvas>
-        <span id="key">{{ message }}</span>
-
+        <span id="key">{{ message }}
+            {% if "Key: " in message %}
+            <button id="cpy" type="button" style="font-size: 18px;" onclick="navigator.clipboard.writeText('{{message}}'.substring(5))">Copy</button>
+            {% endif %}
+        </span>
+        
         <form action="/" method="POST" {% if "Key: " in message %}hidden{% endif %}>
                 {% csrf_token %}
                 {{ form }}
