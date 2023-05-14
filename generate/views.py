@@ -95,7 +95,6 @@ def generate(request):
 
 def keygen():
     api_token = uuid.uuid4()
-    #vla = {"token":f"{api_token}"}
     dt = datetime.date.today() + relativedelta(months=3)
     temp_token = Token(token=api_token, data=0, exp=dt)
     temp_token.save()
