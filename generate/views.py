@@ -78,7 +78,6 @@ def generate(request):
             "message" : "Required size of random number too large"
             }
             return JsonResponse(error)
-        # return rng
         randNum = randNumObj.generator(num_bytes*2)
         data = {"rnum" : randNum}
         obj.data -= num_bytes
@@ -112,7 +111,6 @@ def form(request):
             message = "Key: " + str(keygen())
         else:
             #return form.html with error message
-            # message = "Captcha Error"
             message = ""
     else:
         form = MyForm()
