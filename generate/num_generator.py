@@ -1,5 +1,7 @@
 from rng.settings import ENC_DIR_PATH, DIR_PATH
 import os
+from . import fast_crypt
+
 
 class dataQueue:
     maxSize = 20971520*2 # 20 MB
@@ -16,13 +18,16 @@ class dataQueue:
             print(f"\033[1;31;40m[!] File not exists: \033[0m{e}")
             return
 
+        if len(files) <= 0:
+            fast_crypt.entry()
+
         for file in files:
             file_path = ENC_DIR_PATH + file
             try:
                 with open (file_path, "rb") as f:
                     self.currSize += os.write(self.w, f.read()) # os.write(w, b) returns num of bytes which is added to current size
-            except:
-                print("p")
+            except Exception as e:
+                print("Error: ", e)
                 pass
             self.renameFile(file)
             if self.currSize > self.maxSize: # exit condition

