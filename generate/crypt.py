@@ -1,17 +1,9 @@
 from cryptography.fernet import Fernet
 from rng.settings import UPLOAD_PATH, DIR_PATH, ENC_DIR_PATH
 import binascii
-import shutil
-import base64
 import mmap
 import os
 
-
-# UPLOAD_PATH = os.path.dirname(__file__) + '\\..\\Uploads\\'
-# DIR_PATH = os.path.dirname(__file__) + '\\..\\Uploads\\Temp\\'
-# ENC_DIR_PATH = os.path.dirname(__file__) + '\\..\\Uploads\\Encrypted\\'
-
-# key = base64.urlsafe_b64encode(b'00000000000000000000000000000000')
 key = Fernet.generate_key()
 
 def makeDir(path_name):

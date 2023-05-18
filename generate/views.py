@@ -78,7 +78,6 @@ def generate(request):
             "message" : "Required size of random number too large"
             }
             return JsonResponse(error)
-        # return rng
         randNum = randNumObj.generator(num_bytes*2)
         data = {"rnum" : randNum}
         obj.data -= num_bytes
@@ -95,7 +94,6 @@ def generate(request):
 
 def keygen():
     api_token = uuid.uuid4()
-    #vla = {"token":f"{api_token}"}
     dt = datetime.date.today() + relativedelta(months=3)
     temp_token = Token(token=api_token, data=0, exp=dt)
     temp_token.save()
@@ -113,7 +111,6 @@ def form(request):
             message = "Key: " + str(keygen())
         else:
             #return form.html with error message
-            # message = "Captcha Error"
             message = ""
     else:
         form = MyForm()

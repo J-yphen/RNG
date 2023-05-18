@@ -6,7 +6,4 @@ urlpatterns = [
     path("api/upload/", upload, name="File upload"),
     path("api/balance/", user_quota, name="User Quota"),
     re_path(r'^(?!captcha/).*$', form, name="token generation"),
-    # path("", form, name="token generation"),
-    # path('*', upload, name="token generation"),
-    # path("", upload, name="upload"),
 ]
